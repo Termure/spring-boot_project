@@ -1,7 +1,17 @@
 package com.workspace.myapplication.model;
 
 import jakarta.persistence.*; // for Spring Boot 3 => Fixes: Error creating bean with name 'tutorialRepository' defined in com.workspace.myapplication.repository
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "tutorials")
 public class Tutorial {
@@ -10,18 +20,14 @@ public class Tutorial {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "title")
+	@Column(name = "title", nullable = false)
 	private String title;
 
-	@Column(name = "description")
+	@Column(name = "description", nullable = false)
 	private String description;
 
 	@Column(name = "published")
 	private boolean published;
-
-	public Tutorial() {
-
-	}
 
 	public Tutorial(String title, String description, boolean published) {
 		this.title = title;
