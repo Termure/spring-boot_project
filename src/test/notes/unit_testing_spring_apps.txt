@@ -2,7 +2,7 @@
 - Repository layer is not tested using mockito because reporsitory layers does not have unit dependencies and is connected directly to the database.
   Repository will be tested using @DataJpaTest annotation which provides in memory database for testing.
 
-@DataJpaTest annotation: 
+@DataJpaTest annotation: configures com.h2database in memory database 
   -tests only the persistence layer components
   -does not load other spring beans (@Components, @Controller, @Service, annotated beans) into ApplicationContext
   -the Spring IoC container (containing BeanFactory and ApplicationContext) is responsible for managing the objects of an application
