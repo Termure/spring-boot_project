@@ -1,5 +1,7 @@
 package com.workspace.myapplication.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.workspace.myapplication.model.Tutorial;
@@ -15,6 +17,15 @@ public class TutorialService {
         return tutorialRepository.save(new Tutorial(tutorial.getTitle(), 
                                                     tutorial.getDescription(), 
                                                     tutorial.isPublished() || false));
+    }
+
+    public List<Tutorial> getTutorials(String title){
+        List<Tutorial> tutorials = new ArrayList<Tutorial>();
+        if(title == null)
+            tutorialRepository.findAll().forEach(tutorials::add);
+        else
+            tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
+        return tutorials;
     }
     
     
