@@ -60,4 +60,22 @@ public class TutorialRepositoryTests {
         assertThat(tutorialList).isNotNull();
         assertThat(tutorialList.size()).isEqualTo(2);
     }
+
+    @DisplayName("JUnit test for get tutorial by id operation")
+    @Test 
+    public void givenTutorial_whenFindById_thanReturnTutorial(){
+        // given - precondition or setup 
+        Tutorial tutorial = Tutorial.builder()
+                 .title("Spring boot 3")
+                 .description("First version of spring boot 3")
+                 .published(false)
+                 .build();
+        tutorialRepository.save(tutorial);
+
+        // when - action or the behavior that we are going to test
+        Tutorial tutorialDB = tutorialRepository.findById(tutorial.getId()).get();
+
+        //then - verify the output
+        assertThat(tutorialDB).isNotNull();
+    }
 }

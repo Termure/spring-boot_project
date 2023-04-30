@@ -2,6 +2,8 @@ package com.workspace.myapplication.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.workspace.myapplication.model.Tutorial;
@@ -27,6 +29,8 @@ public class TutorialService {
             tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
         return tutorials;
     }
-    
-    
+
+    public Optional<Tutorial> getTutorialById(long id){
+        return tutorialRepository.findById(id);
+    }
 }
