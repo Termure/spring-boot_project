@@ -107,4 +107,28 @@ public class TutorialRepositoryTests {
         assertThat(tutorialDB.get(0).getId()).isEqualTo(5);
         assertThat(tutorialDB.get(1).getId()).isEqualTo(6);
     }
+
+    @DisplayName("JUnit test for update tutorial")
+    @Test 
+    public void givenTutorial_whenUpdateTutorial_thenReturnUpdatedTutorial(){
+        // given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()
+                .title("Published tutorial")
+                .description("This tutorial is published")
+                .published(true)
+                .build();
+        tutorialRepository.save(tutorial);
+
+        // when - action or the behavior that we are going to test
+        Tutorial savedTutorial = tutorialRepository.findById(tutorial.getId()).get();
+        savedTutorial.setTitle("New title");
+        savedTutorial.setDescription("New description");
+        savedTutorial.setPublished(true);
+        Tutorial updatedTutorial = tutorialRepository.save(savedTutorial);
+
+        // then - verfy the output
+        assertThat(updatedTutorial.getTitle()).isEqualTo("New title");
+        assertThat(updatedTutorial.getDescription()).isEqualTo("New description");
+        assertThat(updatedTutorial.isPublished()).isEqualTo(true);
+    }
 }

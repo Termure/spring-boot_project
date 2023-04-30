@@ -67,15 +67,11 @@ public class TutorialController {
   }
 
   @PutMapping("/tutorials/{id}")
-  public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial tutorial) {
-    Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
+  public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial newTutorialData) {
+    Tutorial tutorial = tutorialService.updateTutorial(id, newTutorialData);
 
-    if (tutorialData.isPresent()) {
-      Tutorial _tutorial = tutorialData.get();
-      _tutorial.setTitle(tutorial.getTitle());
-      _tutorial.setDescription(tutorial.getDescription());
-      _tutorial.setPublished(tutorial.isPublished());
-      return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
+    if (tutorial != null) {
+      return new ResponseEntity<>(tutorial, HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

@@ -37,4 +37,17 @@ public class TutorialService {
     public List<Tutorial> getPublishedTutorials(){
         return tutorialRepository.findByPublished(true);
     }
+
+    public Tutorial updateTutorial(long id, Tutorial newTutorialData){
+        return tutorialRepository.findById(id)
+            .map(_tutorial -> {
+                _tutorial.setTitle(newTutorialData.getTitle());
+                _tutorial.setDescription(newTutorialData.getDescription());
+                _tutorial.setPublished(newTutorialData.isPublished());
+                return tutorialRepository.save(_tutorial);
+            })
+            .orElseGet(() -> {
+                return tutorialRepository.save(newTutorialData);
+            });
+    }
 }
