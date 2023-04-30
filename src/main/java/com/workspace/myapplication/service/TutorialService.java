@@ -33,4 +33,8 @@ public class TutorialService {
     public Optional<Tutorial> getTutorialById(long id){
         return tutorialRepository.findById(id);
     }
+
+    public List<Tutorial> getPublishedTutorials(){
+        return tutorialRepository.findByPublished(true);
+    }
 }

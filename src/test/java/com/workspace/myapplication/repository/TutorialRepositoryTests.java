@@ -36,7 +36,7 @@ public class TutorialRepositoryTests {
 
     @DisplayName("JUnit test for get all tutorial operation")
     @Test
-    public void givenTutorial_whenFindAll_thanTutorialList(){
+    public void givenTutorial_whenFindAll_thenTutorialList(){
         // given - precondition or setup 
         Tutorial tutorial = Tutorial.builder()
                  .title("Spring boot 3")
@@ -63,7 +63,7 @@ public class TutorialRepositoryTests {
 
     @DisplayName("JUnit test for get tutorial by id operation")
     @Test 
-    public void givenTutorial_whenFindById_thanReturnTutorial(){
+    public void givenTutorial_whenFindById_thenReturnTutorial(){
         // given - precondition or setup 
         Tutorial tutorial = Tutorial.builder()
                  .title("Spring boot 3")
@@ -77,5 +77,34 @@ public class TutorialRepositoryTests {
 
         //then - verify the output
         assertThat(tutorialDB).isNotNull();
+    }
+
+    @DisplayName("JUnit test for checking if tutorial is published")
+    @Test 
+    public void givenTutorial_whenFindByPublished_thenReturnTutorial(){
+        // given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()
+                .id(5)
+                .title("Published tutorial")
+                .description("This tutorial is published")
+                .published(true)
+                .build();
+        
+        Tutorial tutorial1 = Tutorial.builder()
+                .id(6)
+                .title("Published tutorial")
+                .description("This tutorial is also publoshed")
+                .published(true)
+                .build();
+        tutorialRepository.save(tutorial);
+        tutorialRepository.save(tutorial1);
+
+        // when - action or the behavior that we are going to test
+        List<Tutorial> tutorialDB = tutorialRepository.findByPublished(true);
+        
+        // then - verfy the output
+        assertThat(tutorialDB.size()).isEqualTo(2);
+        assertThat(tutorialDB.get(0).getId()).isEqualTo(5);
+        assertThat(tutorialDB.get(1).getId()).isEqualTo(6);
     }
 }

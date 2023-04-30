@@ -105,7 +105,7 @@ public class TutorialController {
   @GetMapping("/tutorials/published")
   public ResponseEntity<List<Tutorial>> findByPublished() {
     try {
-      List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
+      List<Tutorial> tutorials = tutorialService.getPublishedTutorials();
 
       if (tutorials.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -115,5 +115,4 @@ public class TutorialController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
 }
