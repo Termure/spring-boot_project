@@ -50,4 +50,12 @@ public class TutorialService {
                 return tutorialRepository.save(newTutorialData);
             });
     }
+
+    public void deleteTutorialById(long id){
+        tutorialRepository.deleteById(id);
+    }
+
+    public void deleteAllTutorials(){
+        tutorialRepository.deleteAll();
+    }
 }

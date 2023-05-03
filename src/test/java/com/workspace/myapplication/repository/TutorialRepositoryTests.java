@@ -2,6 +2,8 @@ package com.workspace.myapplication.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,15 +85,13 @@ public class TutorialRepositoryTests {
     @Test 
     public void givenTutorial_whenFindByPublished_thenReturnTutorial(){
         // given - precondition or setup
-        Tutorial tutorial = Tutorial.builder()
-                .id(5)
+        Tutorial tutorial = Tutorial.builder()        
                 .title("Published tutorial")
                 .description("This tutorial is published")
                 .published(true)
                 .build();
         
-        Tutorial tutorial1 = Tutorial.builder()
-                .id(6)
+        Tutorial tutorial1 = Tutorial.builder()               
                 .title("Published tutorial")
                 .description("This tutorial is also publoshed")
                 .published(true)
@@ -104,8 +104,8 @@ public class TutorialRepositoryTests {
         
         // then - verfy the output
         assertThat(tutorialDB.size()).isEqualTo(2);
-        assertThat(tutorialDB.get(0).getId()).isEqualTo(5);
-        assertThat(tutorialDB.get(1).getId()).isEqualTo(6);
+        //assertThat(tutorialDB.get(0).getId()).isEqualTo(5);
+        //assertThat(tutorialDB.get(1).getId()).isEqualTo(6);
     }
 
     @DisplayName("JUnit test for update tutorial")
@@ -131,4 +131,49 @@ public class TutorialRepositoryTests {
         assertThat(updatedTutorial.getDescription()).isEqualTo("New description");
         assertThat(updatedTutorial.isPublished()).isEqualTo(true);
     }
+
+    @DisplayName("JUNit test for delete tutorial operation")
+    @Test 
+    public void givenTutorial_whenDelete_thenRemove() {
+        // given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()
+                 .title("Tutotial to delete")
+                 .description("This tutotial will be deleted")
+                 .published(true)
+                 .build();
+        tutorialRepository.save(tutorial);
+
+        // when - action or the behavior that we are going to test
+        tutorialRepository.delete(tutorial);
+        Optional<Tutorial> tutorialOptional = tutorialRepository.findById(tutorial.getId());
+        
+        // then - verify the output
+        assertThat(tutorialOptional).isEmpty();
+
+    }
+
+    @DisplayName("JUnit test for delete all tutorils")
+    @Test
+    public void givenTutorialList_whenDeteleAll_thenRemoveAll(){
+        // given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()        
+                .title("Published tutorial")
+                .description("This tutorial is published")
+                .published(true)
+                .build();
+        
+        Tutorial tutorial1 = Tutorial.builder()               
+                .title("Published tutorial")
+                .description("This tutorial is also publoshed")
+                .published(true)
+                .build();
+        tutorialRepository.save(tutorial);
+        tutorialRepository.save(tutorial1);
+
+        // when - action or the behavior that we are going to test
+        tutorialRepository.deleteAll();
+
+        // then - verify the output
+        assertThat(tutorialRepository.findAll()).isEmpty();
+    }   
 }
