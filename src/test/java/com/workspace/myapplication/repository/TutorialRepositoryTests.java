@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
+
+import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.workspace.myapplication.model.Tutorial;
 
 @DataJpaTest
@@ -176,4 +178,24 @@ public class TutorialRepositoryTests {
         // then - verify the output
         assertThat(tutorialRepository.findAll()).isEmpty();
     }   
+
+    @DisplayName ("JUnit test from cusotme query using JPQL with index")
+    @Test 
+    public void givenTitlePublished_whenFindByJPQL_thenReturnTutorialObject(){
+        //given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()        
+                .title("Published tutorial")
+                .description("This tutorial is published")
+                .published(true)
+                .build();
+        tutorialRepository.save(tutorial);
+        String title = "Published tutorial";
+        Boolean published = true;
+
+        // when - action or the behavior that we are going to test
+        Tutorial savedTutorial = tutorialRepository.findByJPQL(title, published);
+        
+        // then - verify the output
+        assertThat(savedTutorial).isNotNull();
+    }
 }
