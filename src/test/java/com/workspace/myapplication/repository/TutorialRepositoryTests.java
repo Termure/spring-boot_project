@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
-
-import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.workspace.myapplication.model.Tutorial;
 
 @DataJpaTest
@@ -197,5 +195,25 @@ public class TutorialRepositoryTests {
         
         // then - verify the output
         assertThat(savedTutorial).isNotNull();
+    }
+
+    @DisplayName("JUnit test for custom query using JPQL with named params")
+    @Test 
+    public void givenTitlePublished_whenFindByJPQLNamedParms_retunTutorial(){
+        // given - precondition or setup 
+        Tutorial tutorial = Tutorial.builder()
+                 .title("Tutorial 2")
+                 .description("Spring boot tutorial 3")
+                 .published(true)
+                 .build();
+        tutorialRepository.save(tutorial);
+        String title = "Tutorial 2";
+        Boolean published = true;
+
+        // when - action or the behavior that we are giong to test
+        Tutorial saveTutorial = tutorialRepository.findByJPQLNamedParams(title, published);
+
+        // then - verify the output
+        assertThat(saveTutorial).isNotNull();
     }
 }
