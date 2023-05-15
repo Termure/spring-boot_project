@@ -22,4 +22,9 @@ public interface TutorialRepository extends JpaRepository<Tutorial, Long> {
   // define custom query using Native SQL with index params
   @Query(value = "select * from tutorials t where t.title = ?1 and t.description = ?2", nativeQuery = true)
   Tutorial findByNativeSQL(String title, String description);
+
+  // define custom query using Native SQL with named params
+  @Query(value = "select * from tutorials t where t.title =:title and t.description =:description", nativeQuery = true)
+  Tutorial findByNativeSQLNamed(@Param("title") String title, @Param("description") String description);
+
 }

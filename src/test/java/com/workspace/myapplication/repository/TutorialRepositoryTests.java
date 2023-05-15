@@ -217,7 +217,7 @@ public class TutorialRepositoryTests {
         assertThat(saveTutorial).isNotNull();
     }
 
-    @DisplayName("JUnit test for custom query using native SQL with index")
+    @DisplayName("JUnit test for custom query using native SQL with index params")
     @Test
     public void givenTitleDescription_whenFindByNativeSQL_thenReturnTutorial(){
         // given - recondition or setup 
@@ -226,13 +226,29 @@ public class TutorialRepositoryTests {
                 .description("First description")
                 .build();
         tutorialRepository.save(tutorial);
-        String titile = "First title";
-        String description = "First description";
-
+    
         // when - action or the behavior that we are going to test
-        Tutorial findTutorial = tutorialRepository.findByNativeSQL(titile, description);
+        Tutorial findTutorial = tutorialRepository.findByNativeSQL(tutorial.getTitle(), tutorial.getDescription());
 
         // then - verify the output
         assertThat(findTutorial).isNotNull();
       }
+
+      @DisplayName("JUnit test for custom query using native SQL with named params")
+      @Test
+      public void givenTitleDescription_whenFindByNativeSQLNamed_thenReturnTutorial(){
+          // given - recondition or setup 
+          Tutorial tutorial = Tutorial.builder()
+                  .title("First title")
+                  .description("First description")
+                  .build();
+          tutorialRepository.save(tutorial);
+      
+          // when - action or the behavior that we are going to test
+          Tutorial findTutorial = tutorialRepository.findByNativeSQLNamed(tutorial.getTitle(), tutorial.getDescription());
+  
+          // then - verify the output
+          assertThat(findTutorial).isNotNull();
+        }
+
 }
