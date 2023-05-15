@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,20 @@ public class TutorialRepositoryTests {
     
     @Autowired TutorialRepository tutorialRepository;
 
+    private Tutorial tutorial;
+
+    @BeforeEach
+    public void setup(){
+        tutorial = Tutorial.builder()
+                .title("Spring boot 3.x")
+                .description("Tutorial description")
+                .published(true)
+                .build();
+    }
+
     @DisplayName("JUnit test for save tutorial operation")
     @Test
     public void givenTutorialObject_wheSave_thenReturnSavedTutorial(){
-
-        // given - precondition or setup 
-        Tutorial tutorial = Tutorial.builder()
-                 .title("Spring boot 3")
-                 .description("First version of spring boot 3")
-                 .published(false)
-                 .build();
-
         // when - action or the behavior than we are going to test
         Tutorial savedTutorial = tutorialRepository.save(tutorial);
 
@@ -40,12 +44,6 @@ public class TutorialRepositoryTests {
     @Test
     public void givenTutorial_whenFindAll_thenTutorialList(){
         // given - precondition or setup 
-        Tutorial tutorial = Tutorial.builder()
-                 .title("Spring boot 3")
-                 .description("First version of spring boot 3")
-                 .published(false)
-                 .build();
-
         Tutorial tutorial1 = Tutorial.builder()
                  .title("Spring boot 3")
                  .description("First version of spring boot 3")
@@ -67,11 +65,6 @@ public class TutorialRepositoryTests {
     @Test 
     public void givenTutorial_whenFindById_thenReturnTutorial(){
         // given - precondition or setup 
-        Tutorial tutorial = Tutorial.builder()
-                 .title("Spring boot 3")
-                 .description("First version of spring boot 3")
-                 .published(false)
-                 .build();
         tutorialRepository.save(tutorial);
 
         // when - action or the behavior that we are going to test
@@ -84,13 +77,7 @@ public class TutorialRepositoryTests {
     @DisplayName("JUnit test for checking if tutorial is published")
     @Test 
     public void givenTutorial_whenFindByPublished_thenReturnTutorial(){
-        // given - precondition or setup
-        Tutorial tutorial = Tutorial.builder()        
-                .title("Published tutorial")
-                .description("This tutorial is published")
-                .published(true)
-                .build();
-        
+        // given - precondition or setup       
         Tutorial tutorial1 = Tutorial.builder()               
                 .title("Published tutorial")
                 .description("This tutorial is also publoshed")
@@ -111,12 +98,7 @@ public class TutorialRepositoryTests {
     @DisplayName("JUnit test for update tutorial")
     @Test 
     public void givenTutorial_whenUpdateTutorial_thenReturnUpdatedTutorial(){
-        // given - precondition or setup
-        Tutorial tutorial = Tutorial.builder()
-                .title("Published tutorial")
-                .description("This tutorial is published")
-                .published(true)
-                .build();
+        // given - precondition or setup       
         tutorialRepository.save(tutorial);
 
         // when - action or the behavior that we are going to test
@@ -136,11 +118,6 @@ public class TutorialRepositoryTests {
     @Test 
     public void givenTutorial_whenDelete_thenRemove() {
         // given - precondition or setup
-        Tutorial tutorial = Tutorial.builder()
-                 .title("Tutotial to delete")
-                 .description("This tutotial will be deleted")
-                 .published(true)
-                 .build();
         tutorialRepository.save(tutorial);
 
         // when - action or the behavior that we are going to test
@@ -156,12 +133,6 @@ public class TutorialRepositoryTests {
     @Test
     public void givenTutorialList_whenDeteleAll_thenRemoveAll(){
         // given - precondition or setup
-        Tutorial tutorial = Tutorial.builder()        
-                .title("Published tutorial")
-                .description("This tutorial is published")
-                .published(true)
-                .build();
-        
         Tutorial tutorial1 = Tutorial.builder()               
                 .title("Published tutorial")
                 .description("This tutorial is also publoshed")
@@ -181,17 +152,10 @@ public class TutorialRepositoryTests {
     @Test 
     public void givenTitlePublished_whenFindByJPQL_thenReturnTutorialObject(){
         //given - precondition or setup
-        Tutorial tutorial = Tutorial.builder()        
-                .title("Published tutorial")
-                .description("This tutorial is published")
-                .published(true)
-                .build();
         tutorialRepository.save(tutorial);
-        String title = "Published tutorial";
-        Boolean published = true;
-
+     
         // when - action or the behavior that we are going to test
-        Tutorial savedTutorial = tutorialRepository.findByJPQL(title, published);
+        Tutorial savedTutorial = tutorialRepository.findByJPQL(tutorial.getTitle(), tutorial.isPublished());
         
         // then - verify the output
         assertThat(savedTutorial).isNotNull();
@@ -201,17 +165,10 @@ public class TutorialRepositoryTests {
     @Test 
     public void givenTitlePublished_whenFindByJPQLNamedParms_retunTutorial(){
         // given - precondition or setup 
-        Tutorial tutorial = Tutorial.builder()
-                 .title("Tutorial 2")
-                 .description("Spring boot tutorial 3")
-                 .published(true)
-                 .build();
         tutorialRepository.save(tutorial);
-        String title = "Tutorial 2";
-        Boolean published = true;
-
+       
         // when - action or the behavior that we are giong to test
-        Tutorial saveTutorial = tutorialRepository.findByJPQLNamedParams(title, published);
+        Tutorial saveTutorial = tutorialRepository.findByJPQLNamedParams(tutorial.getTitle(), tutorial.isPublished());
 
         // then - verify the output
         assertThat(saveTutorial).isNotNull();
@@ -221,10 +178,6 @@ public class TutorialRepositoryTests {
     @Test
     public void givenTitleDescription_whenFindByNativeSQL_thenReturnTutorial(){
         // given - recondition or setup 
-        Tutorial tutorial = Tutorial.builder()
-                .title("First title")
-                .description("First description")
-                .build();
         tutorialRepository.save(tutorial);
     
         // when - action or the behavior that we are going to test
@@ -238,10 +191,6 @@ public class TutorialRepositoryTests {
       @Test
       public void givenTitleDescription_whenFindByNativeSQLNamed_thenReturnTutorial(){
           // given - recondition or setup 
-          Tutorial tutorial = Tutorial.builder()
-                  .title("First title")
-                  .description("First description")
-                  .build();
           tutorialRepository.save(tutorial);
       
           // when - action or the behavior that we are going to test
