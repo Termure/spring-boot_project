@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.workspace.myapplication.exception.ResourceNotFoundException;
@@ -15,8 +14,11 @@ import com.workspace.myapplication.service.TutorialService;
 @Service
 public class TutorialServiceImpl implements TutorialService{
 
-    @Autowired 
     private TutorialRepository tutorialRepository;
+
+    public TutorialServiceImpl(TutorialRepository tutorialRepository){
+        this.tutorialRepository = tutorialRepository;
+    }
 
     @Override
     public Tutorial createTutorial(Tutorial tutorial){
