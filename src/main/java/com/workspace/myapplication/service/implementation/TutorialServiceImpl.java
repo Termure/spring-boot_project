@@ -27,9 +27,7 @@ public class TutorialServiceImpl implements TutorialService{
             throw new ResourceNotFoundException("Tutorial already exists with given title:" + tutorial.getTitle());
         }
 
-        return tutorialRepository.save(new Tutorial(tutorial.getTitle(), 
-                                                    tutorial.getDescription(), 
-                                                    tutorial.isPublished() || false));
+        return tutorialRepository.save(tutorial);
     }
 
     public List<Tutorial> getTutorials(String title){

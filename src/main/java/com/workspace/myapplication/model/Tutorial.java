@@ -1,6 +1,7 @@
 package com.workspace.myapplication.model;
 
 import jakarta.persistence.*; // for Spring Boot 3 => Fixes: Error creating bean with name 'tutorialRepository' defined in com.workspace.myapplication.repository
+import jakarta.servlet.http.PushBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,10 +30,10 @@ public class Tutorial {
 	@Column(name = "published")
 	private boolean published;
 
-	public Tutorial(String title, String description, boolean published) {
+	public Tutorial(String title, String description, Boolean published) {
 		this.title = title;
 		this.description = description;
-		this.published = published;
+		this.published = (published == null) ? false : published;
 	}
 
 	public long getId() {
