@@ -65,7 +65,7 @@ public class TutorialServiceTests {
         List<Tutorial> tutorials = new ArrayList<Tutorial>();
         tutorials.add(tutorial);
         given(tutorialRepository.findByTitleContaining(tutorial.getTitle()))
-                .willReturn(tutorials);
+                .willReturn(tutorials); 
 
         // when - action or the behavior that we are going to test
         org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> {
@@ -74,5 +74,39 @@ public class TutorialServiceTests {
 
         // then - verify the output
         verify(tutorialRepository, never()).save(tutorial);
+    }
+
+    @DisplayName("JUnit test for get all tutorials when titile is not provided")
+    @Test
+    public void givenListOfTutorials_whenFindAll_thenReturnListOfTutorials(){
+        // given - preconditions or setup
+        Tutorial tutorial2 = Tutorial.builder()
+                .title("Tutorial 1")
+                .description("description")
+                .build();
+        given(tutorialRepository.findAll()).willReturn(List.of(tutorial, tutorial2));
+
+        // when - action or the behavior that we are going to test
+        List<Tutorial> tutorials = tutorialService.getTutorials(null);
+
+        // then - verify the output
+        Assertions.assertThat(tutorials).isNotNull();
+        Assertions.assertThat(tutorials.size()).isEqualTo(2);
+    }
+
+    @DisplayName("JUnit test for get all tutorials when titile is provided")
+    @Test
+    public void givenListOfTutorials_whenFindAll_thenReturnTutorials(){
+        // given - preconditions or setup
+        given(tutorialRepository.findByTitleContaining(tutorial.getTitle()))
+                .willReturn(List.of(tutorial));
+
+        // when - action or the behavior that we are going to test
+        List<Tutorial> tutorials = tutorialService.getTutorials(tutorial.getTitle());
+
+        // then - verify the output
+        Assertions.assertThat(tutorials).isNotNull();
+        Assertions.assertThat(tutorials.size()).isEqualTo(1);
+        Assertions.assertThat(tutorials.get(0).getTitle()).isEqualTo(tutorial.getTitle());
     }
 }
