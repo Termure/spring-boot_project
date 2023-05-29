@@ -3,9 +3,10 @@ package com.workspace.myapplication.service;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Collections;
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ public class TutorialServiceTests {
         Tutorial savedTutorial = tutorialService.createTutorial(tutorial);
 
         // then - verify the output
-        Assertions.assertThat(savedTutorial).isNotNull();
+        assertThat(savedTutorial).isNotNull();
     }
 
     @DisplayName("JUnit test for createTutorial which throw a custom exception")
@@ -90,8 +91,8 @@ public class TutorialServiceTests {
         List<Tutorial> tutorials = tutorialService.getTutorials(null);
 
         // then - verify the output
-        Assertions.assertThat(tutorials).isNotNull();
-        Assertions.assertThat(tutorials.size()).isEqualTo(2);
+        assertThat(tutorials).isNotNull();
+        assertThat(tutorials.size()).isEqualTo(2);
     }
 
     @DisplayName("JUnit test for get all tutorials when titile is provided")
@@ -105,8 +106,37 @@ public class TutorialServiceTests {
         List<Tutorial> tutorials = tutorialService.getTutorials(tutorial.getTitle());
 
         // then - verify the output
-        Assertions.assertThat(tutorials).isNotNull();
-        Assertions.assertThat(tutorials.size()).isEqualTo(1);
-        Assertions.assertThat(tutorials.get(0).getTitle()).isEqualTo(tutorial.getTitle());
+        assertThat(tutorials).isNotNull();
+        assertThat(tutorials.size()).isEqualTo(1);
+        assertThat(tutorials.get(0).getTitle()).isEqualTo(tutorial.getTitle());
+    }
+
+    @DisplayName("JUnit test for get all tutorials when titile is provided")
+    @Test
+    public void givenEmptyListOfTutorials_whenFindAll_thenReturnEmptyTutorials(){
+        // given - preconditions or setup
+        given(tutorialRepository.findByTitleContaining(tutorial.getTitle()))
+                .willReturn(Collections.emptyList());
+
+        // when - action or the behavior that we are going to test
+        List<Tutorial> tutorials = tutorialService.getTutorials(tutorial.getTitle());
+
+        // then - verify the output
+        assertThat(tutorials).isEmpty();
+        assertThat(tutorials.size()).isEqualTo(0);
+    }
+
+    @DisplayName("JUnit test for get tutorial by id")
+    @Test
+    public void givenTutorial_whenFindById_thenReturnTutorial(){
+        // given - preconditions or setup
+        given(tutorialRepository.findById(tutorial.getId()))
+                .willReturn(Optional.of(tutorial));
+
+        // when - action or the behavior that we are going to test
+        Tutorial savedTutorial = tutorialService.getTutorialById(tutorial.getId()).get();
+
+        // then - verify the output
+        assertThat(savedTutorial).isNotNull();
     }
 }
