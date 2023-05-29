@@ -139,4 +139,18 @@ public class TutorialServiceTests {
         // then - verify the output
         assertThat(savedTutorial).isNotNull();
     }
+
+    @DisplayName("JUnit test for find published tutorial")
+    @Test
+    public void givenTutorials_whenFindPublshed_thenReturnTutorials(){
+        // given - preconditions or setup
+        given(tutorialRepository.findByPublished(true))
+                .willReturn(List.of(tutorial));
+
+        // when - action or the behavior that we are going to test
+        List<Tutorial> publishedTutorial = tutorialService.getPublishedTutorials();
+
+        // then - verify the output
+        assertThat(publishedTutorial).isNotNull();
+    }
 }
