@@ -21,13 +21,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.workspace.myapplication.exception.ResourceNotFoundException;
 import com.workspace.myapplication.model.Tutorial;
 import com.workspace.myapplication.repository.TutorialRepository;
 import com.workspace.myapplication.service.implementation.TutorialServiceImpl;
-
-import ch.qos.logback.classic.turbo.TurboFilter;
 
 @ExtendWith(MockitoExtension.class)
 public class TutorialServiceTests {
