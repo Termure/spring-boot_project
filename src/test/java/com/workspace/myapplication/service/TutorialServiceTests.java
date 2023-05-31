@@ -24,6 +24,8 @@ import com.workspace.myapplication.model.Tutorial;
 import com.workspace.myapplication.repository.TutorialRepository;
 import com.workspace.myapplication.service.implementation.TutorialServiceImpl;
 
+import ch.qos.logback.classic.turbo.TurboFilter;
+
 @ExtendWith(MockitoExtension.class)
 public class TutorialServiceTests {
 
@@ -152,5 +154,36 @@ public class TutorialServiceTests {
 
         // then - verify the output
         assertThat(publishedTutorial).isNotNull();
+    }
+
+    @DisplayName("JUnit test for update tutorial")
+    @Test
+    public void givenTutorial_whenUpdate_thenReturnTutorial(){
+        // given - preconditions or setup
+        tutorial.setTitle("New title");
+        tutorial.setDescription("New description");
+        tutorial.setPublished(true);
+        given(tutorialRepository.findById(tutorial.getId())).willReturn(Optional.of(tutorial));
+        given(tutorialRepository.save(any(Tutorial.class))).willReturn(tutorial);
+
+        // when - action or the behavior that we are going to test
+        Tutorial updatedTutorial = tutorialService.updateTutorial(tutorial.getId(), tutorial);
+
+        // then - verify the output
+        assertThat(updatedTutorial.getTitle()).isEqualTo("New title");
+    }
+
+    @DisplayName("JUnit test for update not existing tutorial")
+    @Test
+    public void givenTutorial_whenUpdate_thenReturnNewTutorial(){
+        // given - preconditions or setup
+        given(tutorialRepository.findById(tutorial.getId())).willReturn(Optional.empty());
+        given(tutorialRepository.save(any(Tutorial.class))).willReturn(tutorial);
+
+        // when - action or the behavior that we are going to test
+        Tutorial updatedTutorial = tutorialService.updateTutorial(tutorial.getId(), tutorial);
+
+        // then - verify the output
+        assertThat(updatedTutorial.getTitle()).isEqualTo("Some title");
     }
 }
