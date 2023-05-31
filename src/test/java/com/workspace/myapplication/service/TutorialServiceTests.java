@@ -12,13 +12,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.workspace.myapplication.exception.ResourceNotFoundException;
 import com.workspace.myapplication.model.Tutorial;
 import com.workspace.myapplication.repository.TutorialRepository;
@@ -185,5 +188,31 @@ public class TutorialServiceTests {
 
         // then - verify the output
         assertThat(updatedTutorial.getTitle()).isEqualTo("Some title");
+    }
+
+    @DisplayName("JUnit test for delte existing tutorial")
+    @Test
+    public void givenTutorial_whenDelete_thenReturnEmpty(){
+        // given - preconditions or setup
+        willDoNothing().given(tutorialRepository).deleteById(tutorial.getId());
+
+        // when - action or the behavior that we are going to test
+        tutorialService.deleteTutorialById(tutorial.getId());
+
+        // then - verify the output
+        verify(tutorialRepository, times(1)).deleteById(tutorial.getId());
+    }
+
+    @DisplayName("JUnit test for delte existing tutorial")
+    @Test
+    public void givenTutorial_whenDeleteAll_thenReturnEmpty(){
+        // given - preconditions or setup
+        willDoNothing().given(tutorialRepository).deleteAll();
+
+        // when - action or the behavior that we are going to test
+        tutorialService.deleteAllTutorials();
+
+        // then - verify the output
+        verify(tutorialRepository, times(1)).deleteAll();
     }
 }
