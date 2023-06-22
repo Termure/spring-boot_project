@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.workspace.myapplication.model.Tutorial;
-import com.workspace.myapplication.repository.TutorialRepository;
-import com.workspace.myapplication.service.implementation.TutorialServiceImpl;
+import com.workspace.myapplication.service.TutorialService;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -27,10 +26,7 @@ import com.workspace.myapplication.service.implementation.TutorialServiceImpl;
 public class TutorialController {
 
   @Autowired
-  TutorialRepository tutorialRepository;
-
-  @Autowired
-  private TutorialServiceImpl tutorialService;
+  private TutorialService tutorialService;
 
   @GetMapping("/tutorials")
   public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
