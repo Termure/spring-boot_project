@@ -13,15 +13,15 @@ import org.springframework.test.context.TestPropertySource;
 import com.workspace.myapplication.model.Tutorial;
 
 @DataJpaTest
-@TestPropertySource(locations="classpath:application-test.properties")
-public class TutorialRepositoryTests {
+@TestPropertySource(locations = "classpath:application-test.properties")
+class TutorialRepositoryTests {
     
     @Autowired TutorialRepository tutorialRepository;
 
     private Tutorial tutorial;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         tutorial = Tutorial.builder()
                 .title("Spring boot 3.x")
                 .description("Tutorial description")
@@ -31,7 +31,7 @@ public class TutorialRepositoryTests {
 
     @DisplayName("JUnit test for save tutorial operation")
     @Test
-    public void givenTutorialObject_wheSave_thenReturnSavedTutorial(){
+    void givenTutorialObject_wheSave_thenReturnSavedTutorial(){
         // when - action or the behavior than we are going to test
         Tutorial savedTutorial = tutorialRepository.save(tutorial);
 
@@ -42,7 +42,7 @@ public class TutorialRepositoryTests {
 
     @DisplayName("JUnit test for get all tutorial operation")
     @Test
-    public void givenTutorial_whenFindAll_thenTutorialList(){
+    void givenTutorial_whenFindAll_thenTutorialList(){
         // given - precondition or setup 
         Tutorial tutorial1 = Tutorial.builder()
                  .title("Spring boot 3")
@@ -62,8 +62,8 @@ public class TutorialRepositoryTests {
     }
 
     @DisplayName("JUnit test for get tutorial by id operation")
-    @Test 
-    public void givenTutorial_whenFindById_thenReturnTutorial(){
+    @Test
+    void givenTutorial_whenFindById_thenReturnTutorial(){
         // given - precondition or setup 
         tutorialRepository.save(tutorial);
 
@@ -75,8 +75,8 @@ public class TutorialRepositoryTests {
     }
 
     @DisplayName("JUnit test for checking if tutorial is published")
-    @Test 
-    public void givenTutorial_whenFindByPublished_thenReturnTutorial(){
+    @Test
+    void givenTutorial_whenFindByPublished_thenReturnTutorial(){
         // given - precondition or setup       
         Tutorial tutorial1 = Tutorial.builder()               
                 .title("Published tutorial")
@@ -96,8 +96,8 @@ public class TutorialRepositoryTests {
     }
 
     @DisplayName("JUnit test for update tutorial")
-    @Test 
-    public void givenTutorial_whenUpdateTutorial_thenReturnUpdatedTutorial(){
+    @Test
+    void givenTutorial_whenUpdateTutorial_thenReturnUpdatedTutorial(){
         // given - precondition or setup       
         tutorialRepository.save(tutorial);
 
@@ -115,8 +115,8 @@ public class TutorialRepositoryTests {
     }
 
     @DisplayName("JUNit test for delete tutorial operation")
-    @Test 
-    public void givenTutorial_whenDelete_thenRemove() {
+    @Test
+    void givenTutorial_whenDelete_thenRemove() {
         // given - precondition or setup
         tutorialRepository.save(tutorial);
 
@@ -131,7 +131,7 @@ public class TutorialRepositoryTests {
 
     @DisplayName("JUnit test for delete all tutorils")
     @Test
-    public void givenTutorialList_whenDeteleAll_thenRemoveAll(){
+    void givenTutorialList_whenDeteleAll_thenRemoveAll(){
         // given - precondition or setup
         Tutorial tutorial1 = Tutorial.builder()               
                 .title("Published tutorial")
@@ -146,11 +146,11 @@ public class TutorialRepositoryTests {
 
         // then - verify the output
         assertThat(tutorialRepository.findAll()).isEmpty();
-    }   
+    }
 
-    @DisplayName ("JUnit test from cusotme query using JPQL with index")
-    @Test 
-    public void givenTitlePublished_whenFindByJPQL_thenReturnTutorialObject(){
+    @DisplayName("JUnit test from cusotme query using JPQL with index")
+    @Test
+    void givenTitlePublished_whenFindByJPQL_thenReturnTutorialObject(){
         //given - precondition or setup
         tutorialRepository.save(tutorial);
      
@@ -162,8 +162,8 @@ public class TutorialRepositoryTests {
     }
 
     @DisplayName("JUnit test for custom query using JPQL with named params")
-    @Test 
-    public void givenTitlePublished_whenFindByJPQLNamedParms_retunTutorial(){
+    @Test
+    void givenTitlePublished_whenFindByJPQLNamedParms_retunTutorial(){
         // given - precondition or setup 
         tutorialRepository.save(tutorial);
        
@@ -176,7 +176,7 @@ public class TutorialRepositoryTests {
 
     @DisplayName("JUnit test for custom query using native SQL with index params")
     @Test
-    public void givenTitleDescription_whenFindByNativeSQL_thenReturnTutorial(){
+    void givenTitleDescription_whenFindByNativeSQL_thenReturnTutorial(){
         // given - recondition or setup 
         tutorialRepository.save(tutorial);
     
@@ -187,9 +187,9 @@ public class TutorialRepositoryTests {
         assertThat(findTutorial).isNotNull();
       }
 
-      @DisplayName("JUnit test for custom query using native SQL with named params")
-      @Test
-      public void givenTitleDescription_whenFindByNativeSQLNamed_thenReturnTutorial(){
+    @DisplayName("JUnit test for custom query using native SQL with named params")
+    @Test
+    void givenTitleDescription_whenFindByNativeSQLNamed_thenReturnTutorial(){
           // given - recondition or setup 
           tutorialRepository.save(tutorial);
       

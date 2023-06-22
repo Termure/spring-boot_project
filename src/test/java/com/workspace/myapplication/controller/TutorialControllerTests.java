@@ -1,8 +1,12 @@
  package com.workspace.myapplication.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.workspace.myapplication.model.Tutorial;
-import com.workspace.myapplication.service.TutorialService;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,16 +17,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workspace.myapplication.model.Tutorial;
+import com.workspace.myapplication.service.TutorialService;
 
 @WebMvcTest
-@TestPropertySource(locations="classpath:application-test.properties")
-public class TutorialControllerTests {
+@TestPropertySource(locations = "classpath:application-test.properties")
+class TutorialControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -34,7 +36,7 @@ public class TutorialControllerTests {
     private ObjectMapper objectMapper;
 
     @Test
-    public void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception{
+    void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception{
 
         // given - precondition or setup
         Tutorial tutorial = Tutorial.builder()
@@ -54,7 +56,11 @@ public class TutorialControllerTests {
         response.andDo(print()).
                 andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title",
-                        is(tutorial.getTitle())));
-                
+                        is(tutorial.getTitle())))
+                .andExpect(jsonPath("$.description",
+                        is(tutorial.getDescription())))
+                .andExpect(jsonPath("$.published",
+                        is(tutorial.isPublished())));
     }
+
 }
