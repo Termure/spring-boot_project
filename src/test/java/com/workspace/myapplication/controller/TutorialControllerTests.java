@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -120,6 +121,19 @@ class TutorialControllerTests {
         // then - verify the result or putput
         assertThat(tutorialList).hasSize(1);
         assertThat(tutorialList.get(0).getTitle()).isEqualTo("Ana");
+    }
+
+    @DisplayName("Junit test for Get all tutorials when no records are found")
+    @Test 
+    void givenEmptyListOfTutorials_whenFindAll_thenReturnEmptyList() throws Exception{
+        // given - precondition or setup
+        given(tutorialService.getTutorials(null)).willReturn(Collections.emptyList());
+
+        // when - action or behavior that we ae going to test 
+        ResultActions response = mockMvc.perform(get("/api/tutorials"));
+
+        // then - verify the result or output
+        response.andExpect(jsonPath("$").doesNotExist());       
     }
 
 }
