@@ -130,7 +130,8 @@ class TutorialControllerTests {
         given(tutorialService.getTutorials(null)).willReturn(Collections.emptyList());
 
         // when - action or behavior that we ae going to test 
-        ResultActions response = mockMvc.perform(get("/api/tutorials"));
+        ResultActions response = mockMvc.perform(get("/api/tutorials"))
+                .andExpect(status().isNoContent());
 
         // then - verify the result or output
         response.andExpect(jsonPath("$").doesNotExist());       
