@@ -129,9 +129,23 @@ class TutorialControllerTests {
         // given - precondition or setup
         given(tutorialService.getTutorials(null)).willReturn(Collections.emptyList());
 
-        // when - action or behavior that we ae going to test 
+        // when - action or the behavior that we are going to test 
         ResultActions response = mockMvc.perform(get("/api/tutorials"))
                 .andExpect(status().isNoContent());
+
+        // then - verify the result or output
+        response.andExpect(jsonPath("$").doesNotExist());       
+    }
+
+    @DisplayName("Junit test for Get all tutorials when no records are found")
+    @Test 
+    void givenError_whenFindAll_thenReturnError() throws Exception{
+        // given - precondition or setup
+        given(tutorialService.getTutorials(null)).willThrow(new RuntimeException("Internal Server Error"));
+
+        // when - action or the behavior that we are going to test 
+        ResultActions response = mockMvc.perform(get("/api/tutorials"))
+                .andExpect(status().isInternalServerError());
 
         // then - verify the result or output
         response.andExpect(jsonPath("$").doesNotExist());       
