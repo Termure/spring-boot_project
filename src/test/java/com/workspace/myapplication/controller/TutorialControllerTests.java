@@ -8,12 +8,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -149,6 +150,27 @@ class TutorialControllerTests {
 
         // then - verify the result or output
         response.andExpect(jsonPath("$").doesNotExist());       
+    }
+
+    @DisplayName("Junit test for Get tutorial by id when tutorial is present")
+    @Test
+    void givenTutorialId_whenFindById_thenReturnTutorial() throws Exception{
+        // given - precondition or setup
+        long tutorialId = 1L;
+        Tutorial tutorial = Tutorial.builder()
+                .title("title")
+                .description("null")
+                .build();
+        given(tutorialService.getTutorialById(tutorialId)).willReturn(Optional.of(tutorial));
+
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/{id}", tutorialId));
+
+        // then - verfy the result 
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.title", is(tutorial.getTitle())))
+                .andExpect(jsonPath("$.description", is(tutorial.getDescription())));
     }
 
 }

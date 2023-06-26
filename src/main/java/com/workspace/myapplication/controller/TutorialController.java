@@ -1,7 +1,6 @@
 package com.workspace.myapplication.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,13 +43,9 @@ public class TutorialController {
 
   @GetMapping("/tutorials/{id}")
   public ResponseEntity<Tutorial> getTutorialById(@PathVariable long id) {
-    Optional<Tutorial> tutorialData = tutorialService.getTutorialById(id);
-
-    if (tutorialData.isPresent()) {
-      return new ResponseEntity<>(tutorialData.get(), HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+    return tutorialService.getTutorialById(id)
+              .map(ResponseEntity::ok)
+              .orElseGet(() -> ResponseEntity.notFound().build());  
   }
 
   @PostMapping("/tutorials")
