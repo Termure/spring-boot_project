@@ -173,4 +173,19 @@ class TutorialControllerTests {
                 .andExpect(jsonPath("$.description", is(tutorial.getDescription())));
     }
 
+    @DisplayName("Junit test for Get tutorials by id when record is not present")
+    @Test
+    void givenTutorialId_whenFindById_thenNotFoundIsReturned() throws Exception{
+        // given - precondition or setup
+        long tutorial_id = 1L;
+        given(tutorialService.getTutorialById(tutorial_id)).willReturn(Optional.empty());
+        
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/{id}", tutorial_id));
+
+        // then - verify the result
+        response.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").doesNotExist());
+    }
+
 }
