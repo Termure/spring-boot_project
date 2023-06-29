@@ -2,9 +2,11 @@
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -187,5 +189,50 @@ class TutorialControllerTests {
         response.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$").doesNotExist());
     }
+
+    @DisplayName("JUnit test for update tutorial")
+    @Test
+    void givenTutorialId_whenUpdate_thenReturnTutorial() throws Exception {
+        // given - precondition or setup
+        long tutorialId = 1L;
+        Tutorial updatedTutorial = Tutorial.builder()
+                .title("updated title")
+                .description("update description")
+                .build();
+        given(tutorialService.updateTutorial(anyLong(), any(Tutorial.class)))
+                .willAnswer((invocation) -> invocation.getArgument(1));
+    
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(put("/api/tutorials/{id}", tutorialId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedTutorial)));
+    
+        // then - verify the result
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.title", is(updatedTutorial.getTitle())))
+                .andExpect(jsonPath("$.description", is(updatedTutorial.getDescription())));
+    }
+
+    @DisplayName("Junit test for update tutorial negative scenario")
+    @Test 
+    void givenTutorial_whenTutorialNotfound_thenReturn404() throws Exception{
+        // give - precondition or setup
+        Tutorial tutorial = Tutorial.builder()
+                .title("null")
+                .description("null")
+                .build();
+        given(tutorialService.updateTutorial(anyLong(), any(Tutorial.class)))
+                .willReturn(null);
+
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(put("/api/tutorials/{id}", tutorial.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tutorial)));
+
+        // then - verify the result
+        response.andExpect(status().isNotFound());
+    }
+
 
 }

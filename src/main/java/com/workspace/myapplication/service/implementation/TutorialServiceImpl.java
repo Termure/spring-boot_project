@@ -30,6 +30,7 @@ public class TutorialServiceImpl implements TutorialService{
         return tutorialRepository.save(tutorial);
     }
 
+    @Override
     public List<Tutorial> getTutorials(String title){
         List<Tutorial> tutorials = new ArrayList<Tutorial>();
         if(title == null)
@@ -39,14 +40,17 @@ public class TutorialServiceImpl implements TutorialService{
         return tutorials;
     }
 
+    @Override
     public Optional<Tutorial> getTutorialById(long id){
         return tutorialRepository.findById(id);
     }
 
+    @Override
     public List<Tutorial> getPublishedTutorials(){
         return tutorialRepository.findByPublished(true);
     }
 
+    @Override
     public Tutorial updateTutorial(long id, Tutorial newTutorialData){
         return tutorialRepository.findById(id)
             .map(_tutorial -> {
@@ -60,10 +64,12 @@ public class TutorialServiceImpl implements TutorialService{
             });
     }
 
+    @Override
     public void deleteTutorialById(long id){
         tutorialRepository.deleteById(id);
     }
 
+    @Override
     public void deleteAllTutorials(){
         tutorialRepository.deleteAll();
     }
