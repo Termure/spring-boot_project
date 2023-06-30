@@ -4,9 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -232,6 +235,59 @@ class TutorialControllerTests {
 
         // then - verify the result
         response.andExpect(status().isNotFound());
+    }
+
+    @DisplayName("Junit test for delete tutorial by id")
+    @Test 
+    void givenTutorialId_whenDelete_thenReturn204() throws Exception{
+        // given - precondition or setup
+        long tutorialId = 2L;
+        doNothing().when(tutorialService).deleteTutorialById(tutorialId);
+
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(delete("/api/tutorials/{id}", tutorialId));
+        
+        // then - verify the result
+        response.andExpect(status().isNoContent());
+    }
+
+    @DisplayName("Junit test for delete tutorial by id negative scenario")
+    @Test 
+    void givenTutorialId_whenDelete_Retuns500() throws Exception{
+        // given - precondition or setup
+        doThrow(new RuntimeException("500")).when(tutorialService).deleteTutorialById(anyLong());
+
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(delete("/api/tutorials/{id}", anyLong()));
+
+        // then - verify the response 
+        response.andExpect(status().isInternalServerError());
+    }
+
+    @DisplayName("Junit test for delete all tutorial")
+    @Test 
+    void givenTutorials_whenDelete_thenReturn204() throws Exception{
+        // given - precondition or setup 
+        doNothing().when(tutorialService).deleteAllTutorials();
+        
+        // when - action or the behavior that we are going to test 
+        ResultActions response = mockMvc.perform(delete("/api/tutorials"));
+
+        // then - verify the result
+        response.andExpect(status().isNoContent());
+    }
+
+    @DisplayName("Junit test for delete all tutorial negative scenario")
+    @Test 
+    void givenTutorial_whenDelete_thenReturn500() throws Exception{
+        // given - precondition or setup 
+       doThrow(new RuntimeException("500")).when(tutorialService).deleteAllTutorials();
+        
+        // when - action or the behavior that we are going to test 
+       ResultActions response = mockMvc.perform(delete("/api/tutorials"));
+
+       // then - verify the result
+       response.andExpect(status().isInternalServerError());
     }
 
 
