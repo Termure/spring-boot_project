@@ -290,5 +290,67 @@ class TutorialControllerTests {
        response.andExpect(status().isInternalServerError());
     }
 
+    @DisplayName("Junit test for find published tutorials")
+    @Test
+    void givenTutorialsList_whenFindPublished_thenReturnList() throws Exception{
+        // given - precondition or setup 
+        List<Tutorial> listOfTutorialstutoriallist = new ArrayList<>();
+        listOfTutorialstutoriallist.add(Tutorial.builder()
+                .title("null")
+                .description("null")
+                .published(true)
+                .build());
+        listOfTutorialstutoriallist.add(Tutorial.builder()
+                .title("null")
+                .description("null")
+                .published(true)
+                .build());
+        given(tutorialService.getPublishedTutorials()).willReturn(listOfTutorialstutoriallist);
+        
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/published"));
+        MvcResult result = response.andReturn();
+        String customResponse = result.getResponse().getContentAsString();
+        List<Tutorial> listOfTutorials = objectMapper.readValue(customResponse, new TypeReference<List<Tutorial>>() {});
+        
+        // then - verify the result
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", is(2)));
+        
+        boolean onlyPublishedTutorials = true;
+        for (Tutorial tutorial : listOfTutorials) {
+                if (tutorial.isPublished() == false)
+                        onlyPublishedTutorials = false;
+        }
 
+        assertThat(listOfTutorials.size()).isEqualTo(2);
+        assertThat(onlyPublishedTutorials).isEqualTo(true);
+    }
+
+    @DisplayName("Junit test for Get published tutorials when no records are found")
+    @Test
+    void givenNoPublishedTutorils_whenGetPublished_theEmptyListIsReturned() throws Exception{
+        // given - precondition or setup 
+        given(tutorialService.getPublishedTutorials()).willReturn(Collections.emptyList());
+
+        // when - action or the bechavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/published"));
+
+        // then - verify the result
+        response.andExpect(jsonPath("$").doesNotExist());
+    }
+
+    @DisplayName("Junit test for Get published tutotials when exceptin is thrown")
+    @Test
+    void givenTutorilaList_whenGetPublshed_thenExceptionIsThrown() throws Exception{
+        // given - precondition or setup
+        doThrow(new RuntimeException("500")).when(tutorialService).getPublishedTutorials();
+
+        // when - action or the behvior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/published"));
+
+        // then - verofy the response 
+        response.andExpect(status().isInternalServerError());
+    }
 }
