@@ -3,9 +3,14 @@ package com.workspace.myapplication.integration;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,5 +70,29 @@ public class TutorialControllerTests {
                         is(tutorial.getDescription())))
                 .andExpect(jsonPath("$.published",
                         is(tutorial.isPublished())));
+    }
+
+    @DisplayName("Junit Integration test for GET all tutorials when title is not provided")
+    @Test
+    void ghivenListOfTutorials_whenFindAll_thenReturnTutorials() throws Exception{
+        // given -> precondition or setup
+        List<Tutorial> listOfTutorials = new ArrayList<>();
+        listOfTutorials.add(Tutorial.builder()
+                .title("first")
+                .description("first")
+                .build());
+        listOfTutorials.add(Tutorial.builder()
+                .title("second")
+                .description("decond")    
+                .build());  
+        tutorialRepository.saveAll(listOfTutorials);
+        
+        // when - action or behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials"));
+
+        // then - verify the result or output using assert statements
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", CoreMatchers.is(listOfTutorials.size())));
     }
 }
