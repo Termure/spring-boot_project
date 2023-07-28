@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,5 +95,25 @@ public class TutorialControllerTests {
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", CoreMatchers.is(listOfTutorials.size())));
+    }
+
+    @DisplayName("Junit Integration test for Get tutorial by id when tutorial is present")
+    @Test
+    void givenTutorialId_whenFindById_thenReturnTutorial() throws Exception{
+        // given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()
+                .title("title")
+                .description("null")
+                .build();
+        tutorialRepository.save(tutorial);
+
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/{id}", tutorial.getId()));
+
+        // then - verfy the result 
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.title", is(tutorial.getTitle())))
+                .andExpect(jsonPath("$.description", is(tutorial.getDescription())));
     }
 }
