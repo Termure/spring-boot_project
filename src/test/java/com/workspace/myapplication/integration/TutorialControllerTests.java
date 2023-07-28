@@ -1,7 +1,7 @@
 package com.workspace.myapplication.integration;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.doNothing;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,8 +23,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workspace.myapplication.model.Tutorial;
 import com.workspace.myapplication.repository.TutorialRepository;
@@ -167,6 +169,42 @@ public class TutorialControllerTests {
         response.andExpect(status().isNoContent());
     }
 
+    @DisplayName("Junit Integration test for find published tutorials")
+    @Test
+    void givenTutorialsList_whenFindPublished_thenReturnList() throws Exception{
+        // given - precondition or setup 
+        List<Tutorial> listOfTutorialstutoriallist = new ArrayList<>();
+        listOfTutorialstutoriallist.add(Tutorial.builder()
+                .title("null")
+                .description("null")
+                .published(true)
+                .build());
+        listOfTutorialstutoriallist.add(Tutorial.builder()
+                .title("null")
+                .description("null")
+                .published(true)
+                .build());
+        tutorialRepository.saveAll(listOfTutorialstutoriallist);
+        
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(get("/api/tutorials/published"));
+        MvcResult result = response.andReturn();
+        String customResponse = result.getResponse().getContentAsString();
+        List<Tutorial> listOfTutorials = objectMapper.readValue(customResponse, new TypeReference<List<Tutorial>>() {});
+        
+        // then - verify the result
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", is(2)));
+        
+        boolean onlyPublishedTutorials = true;
+        for (Tutorial tutorial : listOfTutorials) {
+                if (tutorial.isPublished() == false)
+                        onlyPublishedTutorials = false;
+        }
 
+        assertThat(listOfTutorials.size()).isEqualTo(2);
+        assertThat(onlyPublishedTutorials).isEqualTo(true);
+    }
 
 }
