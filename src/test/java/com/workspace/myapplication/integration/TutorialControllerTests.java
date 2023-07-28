@@ -1,6 +1,7 @@
 package com.workspace.myapplication.integration;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -149,6 +150,22 @@ public class TutorialControllerTests {
         response.andExpect(status().isNoContent());
     }
 
+    @DisplayName("Junit Integration test for delete tutorial by id")
+    @Test 
+    void givenTutorialId_whenDelete_thenReturn204() throws Exception{
+        // given - precondition or setup
+        Tutorial tutorial = Tutorial.builder()
+                .title("sfs")
+                .description("null")
+                .build();
+        tutorialRepository.save(tutorial);
+
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(delete("/api/tutorials/{id}", tutorial.getId()));
+        
+        // then - verify the result
+        response.andExpect(status().isNoContent());
+    }
 
 
 
