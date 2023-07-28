@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -117,7 +118,7 @@ public class TutorialControllerTests {
                 .andExpect(jsonPath("$.description", is(tutorial.getDescription())));
     }
 
-    @DisplayName("JUnit test for update tutorial")
+    @DisplayName("JUnit Integration test for update tutorial")
     @Test
     void givenTutorialId_whenUpdate_thenReturnTutorial() throws Exception {
         // given - precondition or setup
@@ -137,4 +138,18 @@ public class TutorialControllerTests {
                 .andExpect(jsonPath("$.title", is(updatedTutorial.getTitle())))
                 .andExpect(jsonPath("$.description", is(updatedTutorial.getDescription())));
     }
+
+    @DisplayName("Junit Integration test for delete all tutorial")
+    @Test 
+    void givenTutorials_whenDelete_thenReturn204() throws Exception{
+        // when - action or the behavior that we are going to test 
+        ResultActions response = mockMvc.perform(delete("/api/tutorials"));
+
+        // then - verify the result
+        response.andExpect(status().isNoContent());
+    }
+
+
+
+
 }
