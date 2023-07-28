@@ -4,12 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -115,5 +115,26 @@ public class TutorialControllerTests {
                 .andDo(print())
                 .andExpect(jsonPath("$.title", is(tutorial.getTitle())))
                 .andExpect(jsonPath("$.description", is(tutorial.getDescription())));
+    }
+
+    @DisplayName("JUnit test for update tutorial")
+    @Test
+    void givenTutorialId_whenUpdate_thenReturnTutorial() throws Exception {
+        // given - precondition or setup
+        Tutorial updatedTutorial = Tutorial.builder()
+                .title("updated title")
+                .description("update description")
+                .build();
+        
+        // when - action or the behavior that we are going to test
+        ResultActions response = mockMvc.perform(put("/api/tutorials/{id}", updatedTutorial.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedTutorial)));
+    
+        // then - verify the result
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.title", is(updatedTutorial.getTitle())))
+                .andExpect(jsonPath("$.description", is(updatedTutorial.getDescription())));
     }
 }
