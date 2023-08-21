@@ -24,10 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.workspace.myapplication.model.Tutorial;
@@ -35,14 +31,7 @@ import com.workspace.myapplication.repository.TutorialRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@Testcontainers
-public class TutorialControllerTI {
-
-        @Container
-        private static PostgreSQLContainer postgresqlContainer = new PostgreSQLContainer("postgres:latest")
-                .withUsername("name")
-                .withPassword("password")
-                .withDatabaseName("ems");
+public class TutorialControllerTI extends AbstractionBaseTest{
 
         @Autowired
         private MockMvc mockMvc;
@@ -61,10 +50,6 @@ public class TutorialControllerTI {
         @DisplayName("Junit Integration test for save tutorial")
         @Test
         void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception {
-
-                System.out.println(postgresqlContainer.getUsername());
-                System.out.println(postgresqlContainer.getPassword());
-                System.out.println(postgresqlContainer.getDatabaseName());
 
                 // given - precondition or setup
                 Tutorial tutorial = Tutorial.builder()
