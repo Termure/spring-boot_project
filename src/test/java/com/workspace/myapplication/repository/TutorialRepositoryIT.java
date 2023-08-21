@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
-import com.workspace.myapplication.integration.AbstractionBaseTest;
+import com.workspace.myapplication.integration.AbstractContainerBaseTest;
 import com.workspace.myapplication.model.Tutorial;
 
 @DataJpaTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-class TutorialRepositoryIT extends AbstractionBaseTest {
+class TutorialRepositoryIT extends AbstractContainerBaseTest {
     
     @Autowired TutorialRepository tutorialRepository;
 

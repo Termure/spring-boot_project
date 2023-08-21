@@ -31,7 +31,7 @@ import com.workspace.myapplication.repository.TutorialRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class TutorialControllerTI extends AbstractionBaseTest{
+public class TutorialControllerTI extends AbstractContainerBaseTest{
 
         @Autowired
         private MockMvc mockMvc;
